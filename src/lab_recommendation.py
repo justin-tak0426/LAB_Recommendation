@@ -10,6 +10,7 @@ def lab_recommendation(user_input: str, topk_lab: list[dict]) -> list[dict]:
         index = lab["index"]
         lab_info_prompt = lab_recommendation_prompt(user_input, lab["text"])
 
+
         # LLM에게 lab_info_prompt를 전달하여 추천 이유 생성
         model = AzureChatOpenAI(model='gpt-4o')
         response = model.invoke(lab_info_prompt)
@@ -20,8 +21,12 @@ def lab_recommendation(user_input: str, topk_lab: list[dict]) -> list[dict]:
             "lab_info": lab["text"],
             "recommendation_reason": response_text
         }
+
+        if "관련도 없음" in response_text:
+            continue
+
         result_list.append(result)
 
-        print(result)
+        #print(result)
     
     return result_list
