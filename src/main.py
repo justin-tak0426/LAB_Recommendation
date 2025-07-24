@@ -26,11 +26,15 @@ lab_search_docs = get_docs(lab_total_info_df)
 search_model = load_retriever(lab_search_docs, k=int(top_k) if top_k.isdigit() else 3)
 retrieved_docs = find_topk(search_model, user_query, top_k=int(top_k) if top_k.isdigit() else 3)
 
-recommend_reason = lab_recommendation(user_query, retrieved_docs)
+recommend_reason = lab_recommendation(top_k, user_query, retrieved_docs)
 
-final_result = final_prompts_output(recommend_reason, lab_total_info_df)
+final_result = []
+try:
+    if recommend_reason['index']==-1:
+        print(recommend_reason['recommendation_reason'])
 
-print(final_result[0])
-# for result in final_result:
-#     print(result)
+except:
+    final_result = final_prompts_output(recommend_reason, lab_total_info_df)
+    for result in final_result:
+        print(result)
 

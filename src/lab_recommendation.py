@@ -1,9 +1,10 @@
 from lab_recommendation_prompt import lab_recommendation_prompt
 import openai
 from langchain_openai import AzureChatOpenAI
+from search_agent import search_web
 
 
-def lab_recommendation(user_input: str, topk_lab: list[dict]) -> list[dict]:
+def lab_recommendation(k, user_input: str, topk_lab: list[dict]) -> list[dict]:
     result_list = []
     
     for lab in topk_lab:
@@ -27,6 +28,11 @@ def lab_recommendation(user_input: str, topk_lab: list[dict]) -> list[dict]:
 
         result_list.append(result)
 
-        #print(result)
+    if len(result_list) == 0:
+        print("\n\n\n\n추천할 연구실이 데이터 베이스 상에 없습니다.\n 웹에서 검색을 실시합니다.\n\n\n\n")
+        result = search_web(user_input, max_results=k)
+
+        return result
+
     
     return result_list
